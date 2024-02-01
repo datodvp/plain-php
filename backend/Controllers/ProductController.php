@@ -1,9 +1,5 @@
 <?php
 
-// require __DIR__ . '/../DAO/ProductDAO.php';
-require __DIR__ . '/../Database.php';
-require __DIR__ . '/../Models/Product.php';
-
 class ProductController {
     public static function getAll() {
           
@@ -12,11 +8,13 @@ class ProductController {
         echo $products;
     }
 
-    public static function create() {
+    public static function store() {
 
         $newProductRequest = json_decode(file_get_contents('php://input'), true);
 
         $product = Product::create($newProductRequest);
+        
+        echo json_encode($product);
     }
 
     public static function delete($id_list) {

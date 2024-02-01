@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/Router/Router.php';
+include 'autoloader.php';
 
 $router = new Router();
 $router->handleRoute();

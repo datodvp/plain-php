@@ -1,7 +1,5 @@
 <?php
 
-require __DIR__ . '/../Controllers/ProductController.php';
-
 class Router {
     private $request_uri;
     private $request_method;
@@ -39,7 +37,7 @@ class Router {
                 ProductController::getAll();
                 break;
             case 'POST':
-                ProductController::create();
+                ProductController::store();
                 break;
         }
     }

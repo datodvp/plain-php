@@ -1,18 +1,24 @@
 <?php
 
-require __DIR__ . '/../Models/BookProduct.php';
-require __DIR__ . '/../Models/DVDProduct.php';
-
-abstract class Product {
-    protected $type_id;
-    protected $name;
-    protected $sku;
-    protected $price;
+abstract class Product implements JsonSerializable {
+    public $id;
+    public $type_id;
+    public $name;
+    public $sku;
+    public $price;
 
     public function __construct(array $attributes) {
         $this->name = $attributes['name'];
         $this->sku = $attributes['sku'];
         $this->price = $attributes['price'];
+    }
+
+    protected function getId() {
+        return $this->id;
+    }
+
+    protected function setId($id) {
+        $this->id = $id;
     }
 
     protected function getType() {
@@ -56,6 +62,8 @@ abstract class Product {
             $db = Database::getConnection();
 
             $result = mysqli_query($db, "DELETE FROM products WHERE id IN ($ids)");
+
+            $db->close();
         } catch(\Exception $exception) {
             echo $exception;
         }
@@ -80,6 +88,11 @@ abstract class Product {
         $db->close();
         
         return $productType['name'] . 'Product';
+    }
+    
+    public function jsonSerialize(): array {
+        $properties = get_object_vars($this);
+        return $properties;
     }
 
 }
