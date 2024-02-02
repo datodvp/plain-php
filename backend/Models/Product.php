@@ -38,15 +38,20 @@ abstract class Product implements JsonSerializable {
     }
 
     public static function all() {
-        $db = Database::getConnection();
+        try {
+            $db = Database::getConnection();
 
-        $query = 'SELECT p.*, pt.name as type_name, pt.attribute, pt.measurement
-        FROM products p
-        JOIN product_types pt ON p.type_id = pt.id;';
-        $result = $db->query($query);
-        $data = $result->fetch_all(MYSQLI_ASSOC);
-        $result->free();
-        $db->close();
+            $query = 'SELECT p.*, pt.name as type_name, pt.attribute, pt.measurement
+            FROM products p
+            JOIN product_types pt ON p.type_id = pt.id;';
+            $result = $db->query($query);
+            $data = $result->fetch_all(MYSQLI_ASSOC);
+            $result->free();
+            $db->close();
+        }catch(Exception $e) {
+            throw $e;
+        }
+
 
         // remove class_name column before sending to user
         foreach($data as &$row) {
@@ -77,8 +82,8 @@ abstract class Product implements JsonSerializable {
             $statement->execute();
 
             $db->close();
-        } catch(\Exception $exception) {
-            throw $exception;
+        } catch(Exception $e) {
+            throw $e;
         }
 
         return 'deleted succesfully';
@@ -86,19 +91,24 @@ abstract class Product implements JsonSerializable {
 
     private static function getProductModel(int $typeId) {
 
-        $db = Database::getConnection();
+        try {
+            $db = Database::getConnection();
 
-        $sql = "SELECT * FROM product_types WHERE product_types.id = ?";
-        $statement = $db->prepare($sql);
-        $statement->bind_param("i", $typeId);
-        $statement->execute();
-        $result = $statement->get_result();
-
-        $productType = $result->fetch_assoc();
-
-        $result->free();
-        $statement->close();
-        $db->close();
+            $sql = "SELECT * FROM product_types WHERE product_types.id = ?";
+            $statement = $db->prepare($sql);
+            $statement->bind_param("i", $typeId);
+            $statement->execute();
+            $result = $statement->get_result();
+    
+            $productType = $result->fetch_assoc();
+    
+            $result->free();
+            $statement->close();
+            $db->close();
+        } catch(Exception $e) {
+            throw $e;
+        }
+        
         
         return $productType['class_name'];
     }
