@@ -6,5 +6,6 @@ require 'Controllers/ProductController.php';
 require 'Models/Product.php';
 require 'Models/BookProduct.php';
 require 'Models/DVDProduct.php';
+require 'Models/FurnitureProduct.php';
 
 ?>
