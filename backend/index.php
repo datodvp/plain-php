@@ -4,6 +4,7 @@ include 'autoloader.php';
 
 // This is MVC architecture and resembles LARAVEL framework, 
 // if you are familiar with it, it will be easy to get to know the code.
+header('Access-Control-Allow-Origin: *');
 
 Router::get('/', Controller::class, 'index'); // this is just index page for server  
 
