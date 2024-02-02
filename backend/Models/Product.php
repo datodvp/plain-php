@@ -40,23 +40,29 @@ abstract class Product implements JsonSerializable {
     public static function all() {
         $db = Database::getConnection();
 
-        $result = mysqli_query($db, 'SELECT * FROM products');
+        $result = mysqli_query($db, 'SELECT products.*, product_types.* FROM products JOIN product_types ON products.type_id = product_types.id;');
         $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
         mysqli_free_result($result);
         mysqli_close($db);
+
+        // remove class_name column before sending to user
+        foreach($data as &$row) {
+            unset($row['class_name']);
+        }
+        
 
         return json_encode($data);
     }
 
     public static function create(array $attributes) {
-        $productType = self::getClassFromDB($attributes['type_id']);
+        $productModel = self::getProductModel($attributes['type_id']);
 
-        $product = new $productType($attributes);
+        $product = $productModel::create($attributes);
 
         return $product;
     }
 
-    public static function delete(array $id_list) {
+    public static function massDelete(array $id_list) {
         $ids = implode(',', $id_list);
         try {
             $db = Database::getConnection();
@@ -71,7 +77,7 @@ abstract class Product implements JsonSerializable {
         return 'deleted succesfully';
     }
 
-    private static function getClassFromDB(int $typeId) {
+    private static function getProductModel(int $typeId) {
 
         $db = Database::getConnection();
 
@@ -87,7 +93,7 @@ abstract class Product implements JsonSerializable {
         $statement->close();
         $db->close();
         
-        return $productType['name'] . 'Product';
+        return $productType['class_name'];
     }
     
     public function jsonSerialize(): array {

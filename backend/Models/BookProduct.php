@@ -1,21 +1,22 @@
 <?php
 
 class BookProduct extends Product {
-    private $weight;
+    public $attribute = "Weight";
+    public $measurement = "Kg";
+    public $weight;
 
     public function __construct(array $attributes) {
         parent::__construct($attributes);
         $this->type_id = 1;
         $this->weight = $attributes['type_value'];
-
-        $this->createDBRecord();
     }
 
     private function getWeight() {
         return $this->weight;
     }
 
-    protected function createDBRecord() {
+    public static function create(array $attributes) {
+        $BookProduct = new self($attributes);
 
         $db = Database::getConnection();
 
@@ -23,11 +24,11 @@ class BookProduct extends Product {
 
         $statement = $db->prepare($sql);
         
-        $type_id = $this->getType();
-        $name = $this->getName();
-        $sku = $this->getSKU();
-        $price = $this->getPrice();
-        $weight = $this->getWeight();
+        $type_id = $BookProduct->getType();
+        $name = $BookProduct->getName();
+        $sku = $BookProduct->getSKU();
+        $price = $BookProduct->getPrice();
+        $weight = $BookProduct->getWeight();
         
         $statement->bind_param("issis", $type_id, $name, $sku, $price, $weight);
         
@@ -37,15 +38,16 @@ class BookProduct extends Product {
             // Retrieve the last inserted ID to set for the Class instance
             $lastInsertedId = $db->insert_id;
             
-            $this->setId($lastInsertedId);
+            $BookProduct->setId($lastInsertedId);
             
             echo "Record added in db";
         } else {
             echo 'Failed to add record in db';
         }
-        
+
         $statement->close();
 
+        return $BookProduct;
     }
 
 }

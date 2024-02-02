@@ -1,6 +1,7 @@
 <?php
 
 class FurnitureProduct extends Product {
+    public $attribute = "Dimensions";
     public $dimensions;
 
     public function __construct(array $attributes) {
@@ -8,15 +9,14 @@ class FurnitureProduct extends Product {
         $this->type_id = 3;
 
         $this->dimensions = $attributes['height']. "x" . $attributes['width'] . "x" . $attributes['length'];
-
-        $this->createDBRecord();
     }
 
     private function getDimensions() {
         return $this->dimensions;
     }
 
-    protected function createDBRecord() {
+    public static function create(array $attributes) {
+        $FurnitureProduct = new self($attributes);
 
         $db = Database::getConnection();
 
@@ -24,13 +24,13 @@ class FurnitureProduct extends Product {
 
         $statement = $db->prepare($sql);
         
-        $type_id = $this->getType();
-        $name = $this->getName();
-        $sku = $this->getSKU();
-        $price = $this->getPrice();
-        $dimensions = $this->getDimensions();
+        $type_id = $FurnitureProduct->getType();
+        $name = $FurnitureProduct->getName();
+        $sku = $FurnitureProduct->getSKU();
+        $price = $FurnitureProduct->getPrice();
+        $weight = $FurnitureProduct->getDimensions();
         
-        $statement->bind_param("issis", $type_id, $name, $sku, $price, $dimensions);
+        $statement->bind_param("issis", $type_id, $name, $sku, $price, $weight);
         
         $statement->execute();
 
@@ -38,7 +38,7 @@ class FurnitureProduct extends Product {
             // Retrieve the last inserted ID to set for the Class instance
             $lastInsertedId = $db->insert_id;
             
-            $this->setId($lastInsertedId);
+            $FurnitureProduct->setId($lastInsertedId);
             
             echo "Record added in db";
         } else {
@@ -47,6 +47,7 @@ class FurnitureProduct extends Product {
 
         $statement->close();
 
+        return $FurnitureProduct;
     }
 
 }

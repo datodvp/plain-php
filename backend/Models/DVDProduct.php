@@ -1,21 +1,22 @@
 <?php
 
 class DVDProduct extends Product {
+    public $attribute = "Size";
+    public $measurement = "MB";
     public $size;
 
     public function __construct(array $attributes) {
         parent::__construct($attributes);
         $this->type_id = 2;
         $this->size = $attributes['type_value'];
-
-        $this->createDBRecord();
     }
 
     private function getSize() {
         return $this->size;
     }
 
-    protected function createDBRecord() {
+    public static function create(array $attributes) {
+        $DVDProduct = new self($attributes);
 
         $db = Database::getConnection();
 
@@ -23,11 +24,11 @@ class DVDProduct extends Product {
 
         $statement = $db->prepare($sql);
         
-        $type_id = $this->getType();
-        $name = $this->getName();
-        $sku = $this->getSKU();
-        $price = $this->getPrice();
-        $size = $this->getSize();
+        $type_id = $DVDProduct->getType();
+        $name = $DVDProduct->getName();
+        $sku = $DVDProduct->getSKU();
+        $price = $DVDProduct->getPrice();
+        $size = $DVDProduct->getSize();
         
         $statement->bind_param("issis", $type_id, $name, $sku, $price, $size);
         
@@ -37,7 +38,7 @@ class DVDProduct extends Product {
             // Retrieve the last inserted ID to set for the Class instance
             $lastInsertedId = $db->insert_id;
             
-            $this->setId($lastInsertedId);
+            $DVDProduct->setId($lastInsertedId);
             
             echo "Record added in db";
         } else {
@@ -46,6 +47,7 @@ class DVDProduct extends Product {
 
         $statement->close();
 
+        return $DVDProduct;
     }
 
 }

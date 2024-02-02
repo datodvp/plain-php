@@ -1,6 +1,6 @@
 <?php
 
-class ProductController {
+class ProductController extends Controller {
     public static function getAll() {
           
         $products = Product::all();
@@ -17,9 +17,9 @@ class ProductController {
         echo json_encode($product);
     }
 
-    public static function delete($id_list) {
+    public static function massDelete($id_list) {
 
-        $result = Product::delete($id_list);
+        $result = Product::massDelete($id_list);
 
         echo $result;
     }
