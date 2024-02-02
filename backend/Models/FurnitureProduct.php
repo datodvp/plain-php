@@ -2,6 +2,7 @@
 
 class FurnitureProduct extends Product {
     public $attribute = "Dimensions";
+    public $measurement = null;
     public $dimensions;
 
     public function __construct(array $attributes) {
@@ -40,9 +41,6 @@ class FurnitureProduct extends Product {
             
             $FurnitureProduct->setId($lastInsertedId);
             
-            echo "Record added in db";
-        } else {
-            echo 'Failed to add record in db';
         }
 
         $statement->close();

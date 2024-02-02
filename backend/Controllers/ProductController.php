@@ -1,27 +1,35 @@
 <?php
 
 class ProductController extends Controller {
-    public static function getAll() {
+
+
+    public function index() {
           
         $products = Product::all();
         
-        echo $products;
+        $this->jsonResponse($products);
     }
 
-    public static function store() {
+    public function store() {
 
-        $newProductRequest = json_decode(file_get_contents('php://input'), true);
+        $requestBody = json_decode(file_get_contents('php://input'), true);
 
-        $product = Product::create($newProductRequest);
+        $attributes = $requestBody;
+
+        $product = Product::create($requestBody);
         
-        echo json_encode($product);
+        $this->jsonResponse($product);
     }
 
-    public static function massDelete($id_list) {
+    public function massDelete() {
+
+        $requestBody = json_decode(file_get_contents('php://input'), true);
+
+        $id_list = $requestBody['id_list'];
 
         $result = Product::massDelete($id_list);
 
-        echo $result;
+        $this->jsonResponse($result);
     }
 }
 

@@ -39,10 +39,7 @@ class DVDProduct extends Product {
             $lastInsertedId = $db->insert_id;
             
             $DVDProduct->setId($lastInsertedId);
-            
-            echo "Record added in db";
-        } else {
-            echo 'Failed to add record in db';
+
         }
 
         $statement->close();

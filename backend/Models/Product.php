@@ -40,18 +40,21 @@ abstract class Product implements JsonSerializable {
     public static function all() {
         $db = Database::getConnection();
 
-        $result = mysqli_query($db, 'SELECT products.*, product_types.* FROM products JOIN product_types ON products.type_id = product_types.id;');
-        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        mysqli_free_result($result);
-        mysqli_close($db);
+        $query = 'SELECT p.*, pt.name as type_name, pt.attribute, pt.measurement
+        FROM products p
+        JOIN product_types pt ON p.type_id = pt.id;';
+        $result = $db->query($query);
+        $data = $result->fetch_all(MYSQLI_ASSOC);
+        $result->free();
+        $db->close();
 
         // remove class_name column before sending to user
         foreach($data as &$row) {
             unset($row['class_name']);
+            unset($row['type_id']);
         }
-        
 
-        return json_encode($data);
+        return $data;
     }
 
     public static function create(array $attributes) {
@@ -62,16 +65,20 @@ abstract class Product implements JsonSerializable {
         return $product;
     }
 
-    public static function massDelete(array $id_list) {
+    public static function massdelete(array $id_list) {
         $ids = implode(',', $id_list);
+
         try {
             $db = Database::getConnection();
 
-            $result = mysqli_query($db, "DELETE FROM products WHERE id IN ($ids)");
+            $sql = "DELETE FROM products WHERE id IN ($ids)";
+
+            $statement = $db->prepare($sql);
+            $statement->execute();
 
             $db->close();
         } catch(\Exception $exception) {
-            echo $exception;
+            throw $exception;
         }
 
         return 'deleted succesfully';

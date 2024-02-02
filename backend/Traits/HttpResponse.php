@@ -2,7 +2,7 @@
 
 trait HttpResponse {
     public function jsonResponse($data) {
-        echo $data;
+        echo json_encode($data);
     }
 }
 

@@ -19,8 +19,9 @@ class Database {
                 $db->password,
                 $db->db_name
             );
-        } catch(\Exception $exception){
-            echo "Connection error: " . $exception->getMessage();
+        } catch(Exception $e){
+            http_response_code(500);
+            throw $e;
         }
         
         return $db->connection;
