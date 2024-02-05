@@ -29,7 +29,9 @@ class ProductController extends Controller {
 
         $result = Product::massDelete($id_list);
 
-        $this->jsonResponse($result);
+        $products = Product::all();
+
+        $this->jsonResponse($products, 'items removed');
     }
 }
 

@@ -1,8 +1,11 @@
 <?php
 
 trait HttpResponse {
-    public function jsonResponse($data) {
-        echo json_encode($data);
+    public function jsonResponse($data, string $message = 'success') {
+        echo json_encode([
+            'data' => $data,
+            'message' => $message
+        ]);
     }
 }
 

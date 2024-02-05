@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import List from "./pages/List";
 import './index.css'
+import AddProduct from "./pages/AddProduct";
 
 const router = createBrowserRouter([
   {
@@ -13,7 +14,7 @@ const router = createBrowserRouter([
   },
   {
     path: "add-product",
-    element: <div>add product</div>,
+    element: <AddProduct />,
   },
 ]);
 
