@@ -4,7 +4,7 @@ import { ChangeEvent, useEffect, useState } from 'react'
 import BookInput from '../components/BookInput';
 import DVDInput from '../components/DVDInput';
 import FurnitureInput from '../components/FurnitureInput';
-import axios from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 
 export interface IPostBody {
     type_id: string,
@@ -18,11 +18,44 @@ export interface IPostBody {
     length?: string
 }
 
+interface ISuccessResponse {
+    type_id: string,
+    name: string,
+    sku: string,
+    price: string,
+    weight?: string,
+    size?: string
+    width?: string
+    height?: string
+    length?: string
+}
+
+interface IErrorResponse {
+    type_id: string,
+    name: string,
+    sku: string,
+    price: string,
+    weight?: string,
+    size?: string
+    width?: string
+    height?: string
+    length?: string
+}
+
+interface IApiResonse {
+    data?: {
+        product?: ISuccessResponse
+        errors?: IErrorResponse,
+    },
+    message: string
+}
+
 const AddProduct = () => {
     const BOOK = 1;
     const DVD = 2;
     const Furniture = 3;
     const [currentType, setCurrentType] = useState<any>(null);
+    const [errors, setErrors] = useState<IErrorResponse>();
     const [newItem, setNewItem] = useState<IPostBody>({
         "type_id": "",
         "name": "",
@@ -69,6 +102,12 @@ const AddProduct = () => {
 
     const addItem = () => {
         axios.post('http://127.0.0.1:8000/api/products', newItem)
+        .then((response: AxiosResponse<IApiResonse>) => {
+            console.log(response.data.data?.product);
+        })
+        .catch((error: AxiosError<IApiResonse>) => {
+            setErrors(error.response?.data.data?.errors);
+        })
     }
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -115,8 +154,11 @@ const AddProduct = () => {
                     </div>
                     <div className='flex flex-col'>
                         <input type="text" name='sku' value={newItem.sku} onChange={handleInputChange} id='sku' className='border p-[5px] m-1' />
+                        {errors?.sku}
                         <input type="text" name='name' value={newItem.name} onChange={handleInputChange} id='name' className='border p-[5px] m-1' />
+                        {errors?.name}
                         <input type="text" name='price' value={newItem.price} onChange={handleInputChange} id='price' className='border p-[5px] m-1' />
+                        {errors?.price}
                     </div>
                 </div>
 

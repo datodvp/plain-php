@@ -22,7 +22,7 @@ class ProductController extends Controller {
             return $this->jsonResponse($result, 'Validation error');
         }
         
-        return $this->jsonResponse($result);
+        return $this->jsonResponse($result, 'Product created');
     }
 
     public function massDelete() {
