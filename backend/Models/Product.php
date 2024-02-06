@@ -1,11 +1,11 @@
 <?php
 
 abstract class Product implements JsonSerializable {
-    public $id;
-    public $type_id;
-    public $name;
-    public $sku;
-    public $price;
+    protected $id;
+    protected $type_id;
+    protected $name;
+    protected $sku;
+    protected $price;
 
     public function __construct(array $attributes) {
         $this->name = $attributes['name'];
@@ -65,9 +65,16 @@ abstract class Product implements JsonSerializable {
     public static function create(array $attributes) {
         $productModel = self::getProductModel($attributes['type_id']);
 
+        $errors = $productModel::validate($attributes);
+        
+        if(!empty($errors)) {
+            http_response_code(400);
+            return ['errors' => $errors];
+        }
+
         $product = $productModel::create($attributes);
 
-        return $product;
+        return ['product' => $product];
     }
 
     public static function massdelete(array $id_list) {

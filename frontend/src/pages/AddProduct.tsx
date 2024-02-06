@@ -1,22 +1,71 @@
 import { Link } from 'react-router-dom'
 import Footer from '../components/Footer'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import BookInput from '../components/BookInput';
 import DVDInput from '../components/DVDInput';
 import FurnitureInput from '../components/FurnitureInput';
 import axios from 'axios';
+
+export interface IPostBody {
+    type_id: string,
+    name: string,
+    sku: string,
+    price: string,
+    weight?: string,
+    size?: string
+    width?: string
+    height?: string
+    length?: string
+}
 
 const AddProduct = () => {
     const BOOK = 1;
     const DVD = 2;
     const Furniture = 3;
     const [currentType, setCurrentType] = useState<any>(null);
-    const [newItem, setNewItem] = useState({
+    const [newItem, setNewItem] = useState<IPostBody>({
         "type_id": "",
         "name": "",
         "sku": "",
         "price": "",
     })
+
+    useEffect(() => {
+        function switchBody() {
+            if(currentType == BOOK) {
+                setNewItem({
+                    "type_id": newItem.type_id,
+                    "name": newItem.name,
+                    "sku": newItem.sku,
+                    "price": newItem.sku,
+                    "weight": ""
+                })
+            }
+            if(currentType == DVD) {
+                setNewItem({
+                    "type_id": newItem.type_id,
+                    "name": newItem.name,
+                    "sku": newItem.sku,
+                    "price": newItem.sku,
+                    "size": ""
+                })
+            }
+
+            if(currentType == Furniture) {
+                setNewItem({
+                    "type_id": newItem.type_id,
+                    "name": newItem.name,
+                    "sku": newItem.sku,
+                    "price": newItem.sku,
+                    "width": "",
+                    "height": "",
+                    "length": ""
+                })
+            }
+        }
+
+        switchBody();
+    }, [currentType])
 
     const addItem = () => {
         axios.post('http://127.0.0.1:8000/api/products', newItem)
@@ -80,9 +129,9 @@ const AddProduct = () => {
                         <option value="3">Furniture</option>
                     </select>
                 </div>
-                {currentType === BOOK ? <BookInput /> : 
-                currentType === DVD ? <DVDInput /> :
-                currentType === Furniture && <FurnitureInput />}
+                {currentType === BOOK ? <BookInput value={newItem.weight} handleInputChange={handleInputChange} /> : 
+                currentType === DVD ? <DVDInput value={newItem.size} handleInputChange={handleInputChange} /> :
+                currentType === Furniture && <FurnitureInput value={newItem} handleInputChange={handleInputChange} />}
             </div>
         </div>
         <Footer />

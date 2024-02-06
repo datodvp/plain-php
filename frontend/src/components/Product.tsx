@@ -29,7 +29,7 @@ const Product: FC<Props> = ({ product, addMassDeleteItem, removeMassDeleteItem})
             <p>{product.sku}</p>
             <p>{product.name}</p>
             <p>{product.price}</p>
-            <p>{product.attribute}: {product.type_value}</p>
+            <p>{product.attribute}: {product.type_value} {product.measurement}</p>
         </div>
     )
 }

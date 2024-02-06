@@ -1,19 +1,35 @@
 <?php
 
 class FurnitureProduct extends Product {
-    public $attribute = "Dimensions";
-    public $measurement = null;
-    public $dimensions;
+    private $attribute = "Dimensions";
+    private $measurement = null;
+    private $dimensions;
+    private $width;
+    private $height;
+    private $length;
 
     public function __construct(array $attributes) {
         parent::__construct($attributes);
         $this->type_id = 3;
+        $this->width = $attributes['width'];
+        $this->height = $attributes['height'];
+        $this->length = $attributes['length'];
 
         $this->dimensions = $attributes['height']. "x" . $attributes['width'] . "x" . $attributes['length'];
     }
 
     private function getDimensions() {
         return $this->dimensions;
+    }
+
+    public function getWidth() {
+        return $this->width;
+    }
+    public function getHeight() {
+        return $this->height;
+    }
+    public function getLength() {
+        return $this->length;
     }
 
     public static function create(array $attributes) {
@@ -46,6 +62,36 @@ class FurnitureProduct extends Product {
         $statement->close();
 
         return $FurnitureProduct;
+    }
+
+    public static function validate(array $attributes) {
+        $bookProduct = new self($attributes);
+
+        $errors = [];
+
+        if(!$bookProduct->getName()) {
+            $errors['name'] = 'Please, submit required data';
+        }
+        if(!$bookProduct->getSKU()) {
+            $errors['sku'] = 'Please, submit required data';
+        }
+        if(!$bookProduct->getType()) {
+            $errors['type_id'] = 'Please, submit required data';
+        }
+        if(!$bookProduct->getPrice()) {
+            $errors['price'] = 'Please, submit required data';
+        }
+        if(!$bookProduct->getWidth()) {
+            $errors['width'] = 'Please, submit required data';
+        }
+        if(!$bookProduct->getHeight()) {
+            $errors['height'] = 'Please, submit required data';
+        }
+        if(!$bookProduct->getLength()) {
+            $errors['length'] = 'Please, submit required data';
+        }
+
+        return $errors;
     }
 
 }

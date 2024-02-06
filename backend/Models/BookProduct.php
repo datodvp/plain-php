@@ -1,14 +1,14 @@
 <?php
 
 class BookProduct extends Product {
-    public $attribute = "Weight";
-    public $measurement = "Kg";
-    public $weight;
+    private $attribute = "Weight";
+    private $measurement = "Kg";
+    private $weight;
 
     public function __construct(array $attributes) {
         parent::__construct($attributes);
         $this->type_id = 1;
-        $this->weight = $attributes['type_value'];
+        $this->weight = $attributes['weight'];
     }
 
     private function getWeight() {
@@ -44,6 +44,30 @@ class BookProduct extends Product {
         $statement->close();
 
         return $BookProduct;
+    }
+
+    public static function validate(array $attributes) {
+        $bookProduct = new self($attributes);
+
+        $errors = [];
+
+        if(!$bookProduct->getName()) {
+            $errors['name'] = 'Please, submit required data';
+        }
+        if(!$bookProduct->getSKU()) {
+            $errors['sku'] = 'Please, submit required data';
+        }
+        if(!$bookProduct->getType()) {
+            $errors['type_id'] = 'Please, submit required data';
+        }
+        if(!$bookProduct->getPrice()) {
+            $errors['price'] = 'Please, submit required data';
+        }
+        if(!$bookProduct->getWeight()) {
+            $errors['weight'] = 'Please, submit required data';
+        }
+
+        return $errors;
     }
 
 }

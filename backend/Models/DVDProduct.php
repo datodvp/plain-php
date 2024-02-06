@@ -1,14 +1,14 @@
 <?php
 
 class DVDProduct extends Product {
-    public $attribute = "Size";
-    public $measurement = "MB";
-    public $size;
+    private $attribute = "Size";
+    private $measurement = "MB";
+    private $size;
 
     public function __construct(array $attributes) {
         parent::__construct($attributes);
         $this->type_id = 2;
-        $this->size = $attributes['type_value'];
+        $this->size = $attributes['size'];
     }
 
     private function getSize() {
@@ -45,6 +45,30 @@ class DVDProduct extends Product {
         $statement->close();
 
         return $DVDProduct;
+    }
+
+    public static function validate(array $attributes) {
+        $bookProduct = new self($attributes);
+
+        $errors = [];
+
+        if(!$bookProduct->getName()) {
+            $errors['name'] = 'Please, submit required data';
+        }
+        if(!$bookProduct->getSKU()) {
+            $errors['sku'] = 'Please, submit required data';
+        }
+        if(!$bookProduct->getType()) {
+            $errors['type_id'] = 'Please, submit required data';
+        }
+        if(!$bookProduct->getPrice()) {
+            $errors['price'] = 'Please, submit required data';
+        }
+        if(!$bookProduct->getSize()) {
+            $errors['size'] = 'Please, submit required data';
+        }
+
+        return $errors;
     }
 
 }

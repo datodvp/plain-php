@@ -16,9 +16,13 @@ class ProductController extends Controller {
 
         $attributes = $requestBody;
 
-        $product = Product::create($requestBody);
+        $result = Product::create($requestBody);
+
+        if(isset($result->errors)) {
+            return $this->jsonResponse($result, 'Validation error');
+        }
         
-        $this->jsonResponse($product);
+        return $this->jsonResponse($result);
     }
 
     public function massDelete() {

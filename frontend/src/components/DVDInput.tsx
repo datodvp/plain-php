@@ -1,6 +1,9 @@
-import React from 'react'
+import { ChangeEvent } from 'react'
 
-type Props = {}
+type Props = {
+  value: string | undefined,
+  handleInputChange: (event: ChangeEvent<HTMLInputElement>) => void
+}
 
 const DVDInput = (props: Props) => {
   return (
@@ -9,7 +12,7 @@ const DVDInput = (props: Props) => {
             <label htmlFor="size" className='p-[5px] m-1'>Size (MB):</label>
         </div>
         <div className='flex flex-col'>
-            <input type="text" name='size' id='size' className='border p-[5px] m-1' />
+          <input type="text" name='size' value={props.value} onChange={props.handleInputChange} id='size' className='border p-[5px] m-1' />
         </div>
     </div>
   )
