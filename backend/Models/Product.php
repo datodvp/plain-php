@@ -63,10 +63,16 @@ abstract class Product implements JsonSerializable {
     }
 
     public static function create(array $attributes) {
-        $productModel = self::getProductModel($attributes['type_id']);
+        $errors = [];
 
-        $errors = $productModel::validate($attributes);
-        
+        if($attributes['type_id']) {
+            $productModel = self::getProductModel($attributes['type_id']);
+            $errors = $productModel::validate($attributes);
+        } else {
+            $errors = self::validate($attributes);
+            $errors['type_id'] = 'Please, submit required data';
+        }
+
         if(!empty($errors)) {
             http_response_code(400);
             return ['errors' => $errors];
@@ -96,7 +102,11 @@ abstract class Product implements JsonSerializable {
         return 'deleted succesfully';
     }
 
-    private static function getProductModel(int $typeId) {
+    private static function getProductModel($typeId) {
+
+        if(!$typeId) {
+            return;
+        }
 
         try {
             $db = Database::getConnection();
@@ -118,6 +128,22 @@ abstract class Product implements JsonSerializable {
         
         
         return $productType['class_name'];
+    }
+
+    public static function validate(array $attributes) {
+        $errors = [];
+
+        if(!$attributes['name']) {
+            $errors['name'] = 'Please, submit required data';
+        }
+        if(!$attributes['sku']) {
+            $errors['sku'] = 'Please, submit required data';
+        }
+        if(!$attributes['price']) {
+            $errors['price'] = 'Please, submit required data';
+        }
+
+        return $errors;
     }
     
     public function jsonSerialize(): array {

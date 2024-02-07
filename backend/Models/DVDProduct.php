@@ -67,6 +67,9 @@ class DVDProduct extends Product {
         if(!$bookProduct->getSize()) {
             $errors['size'] = 'Please, submit required data';
         }
+        if(!$bookProduct->getType()) {
+            $errors['type_id'] = 'Please, submit required data';
+        }
 
         return $errors;
     }

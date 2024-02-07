@@ -5,6 +5,7 @@ import BookInput from '../components/BookInput';
 import DVDInput from '../components/DVDInput';
 import FurnitureInput from '../components/FurnitureInput';
 import axios, { AxiosError, AxiosResponse } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export interface IPostBody {
     type_id: string,
@@ -54,6 +55,7 @@ const AddProduct = () => {
     const BOOK = 1;
     const DVD = 2;
     const Furniture = 3;
+    const navigate = useNavigate();
     const [currentType, setCurrentType] = useState<any>(null);
     const [errors, setErrors] = useState<IErrorResponse>();
     const [newItem, setNewItem] = useState<IPostBody>({
@@ -70,7 +72,7 @@ const AddProduct = () => {
                     "type_id": newItem.type_id,
                     "name": newItem.name,
                     "sku": newItem.sku,
-                    "price": newItem.sku,
+                    "price": newItem.price,
                     "weight": ""
                 })
             }
@@ -79,7 +81,7 @@ const AddProduct = () => {
                     "type_id": newItem.type_id,
                     "name": newItem.name,
                     "sku": newItem.sku,
-                    "price": newItem.sku,
+                    "price": newItem.price,
                     "size": ""
                 })
             }
@@ -89,7 +91,7 @@ const AddProduct = () => {
                     "type_id": newItem.type_id,
                     "name": newItem.name,
                     "sku": newItem.sku,
-                    "price": newItem.sku,
+                    "price": newItem.price,
                     "width": "",
                     "height": "",
                     "length": ""
@@ -104,8 +106,10 @@ const AddProduct = () => {
         axios.post('http://127.0.0.1:8000/api/products', newItem)
         .then((response: AxiosResponse<IApiResonse>) => {
             console.log(response.data.data?.product);
+            navigate('/');
         })
         .catch((error: AxiosError<IApiResonse>) => {
+            console.log(error.response?.data.data?.errors);
             setErrors(error.response?.data.data?.errors);
         })
     }
@@ -146,31 +150,46 @@ const AddProduct = () => {
         </div>
         <div className="grid gap-6 sm:grid-cols-1 h-full ml-10% w-fit p-10">
             <div className='flex flex-col gap-5'>
-                <div className='flex'>
-                    <div className='flex flex-col'>
-                        <label htmlFor="sku" className='p-[5px] m-1'>SKU:</label>
-                        <label htmlFor="name" className='p-[5px] m-1'>Name:</label>
-                        <label htmlFor="price" className='p-[5px] m-1'>price:</label>
+                <div className='flex flex-col'>
+            
+                    <div className='flex flex-col w-[270px] gap-3'>   
+                        <div className='flex   justify-between'>
+                            <label htmlFor="sku" className='p-[5px]'>SKU:</label>
+                            <div className='flex flex-col'>
+                                <input type="text" name='sku' value={newItem.sku} onChange={handleInputChange} id='sku' className='border p-[5px]' />
+                                <span className='text-sm text-red-500'>{errors?.sku}</span>
+                            </div>
+                        </div>
+                        <div className='flex   justify-between'>
+                            <label htmlFor="name" className='p-[5px]'>Name:</label>
+                            <div className='flex flex-col '>
+                              <input type="text" name='name' value={newItem.name} onChange={handleInputChange} id='name' className='border p-[5px]' />
+                              <span className='text-sm text-red-500'>{errors?.name}</span>
+                            </div>
+
+                        </div>
+                        <div className='flex  justify-between'>
+                            <label htmlFor="price" className='p-[5px]'>price:</label>
+                            <div className='flex flex-col'>
+                                <input type="text" name='price' value={newItem.price} onChange={handleInputChange} id='price' className='border p-[5px]' />
+                                <span className='text-sm text-red-500'>{errors?.price}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div className='flex flex-col'>
-                        <input type="text" name='sku' value={newItem.sku} onChange={handleInputChange} id='sku' className='border p-[5px] m-1' />
-                        {errors?.sku}
-                        <input type="text" name='name' value={newItem.name} onChange={handleInputChange} id='name' className='border p-[5px] m-1' />
-                        {errors?.name}
-                        <input type="text" name='price' value={newItem.price} onChange={handleInputChange} id='price' className='border p-[5px] m-1' />
-                        {errors?.price}
+                </div>
+                <div>
+                    <div className='flex gap-5'>
+                        <label htmlFor="select">Type Switcher</label>
+                        <select onChange={changeType} name="type_value" id="select" defaultValue="" className='border'>
+                            <option value="" disabled>Select Type</option>
+                            <option value="1">Book</option>
+                            <option value="2">DVD</option>
+                            <option value="3">Furniture</option>
+                        </select>
                     </div>
+                    <div className='text-sm text-red-500'>{errors?.type_id}</div>
                 </div>
 
-                <div className='flex gap-5'>
-                    <label htmlFor="select">Type Switcher</label>
-                    <select onChange={changeType} name="type_value" id="select" defaultValue="" className='border'>
-                        <option value="" disabled>Select Type</option>
-                        <option value="1">Book</option>
-                        <option value="2">DVD</option>
-                        <option value="3">Furniture</option>
-                    </select>
-                </div>
                 {currentType === BOOK ? <BookInput value={newItem.weight} handleInputChange={handleInputChange} /> : 
                 currentType === DVD ? <DVDInput value={newItem.size} handleInputChange={handleInputChange} /> :
                 currentType === Furniture && <FurnitureInput value={newItem} handleInputChange={handleInputChange} />}

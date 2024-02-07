@@ -55,26 +55,29 @@ const List = () => {
     }
 
   return (<>
-    <div className="flex flex-col h-full">
-        <div className="border border-b-black p-8 flex justify-between items-center">
-            <h1 className="text-4xl font-bold">Product List</h1>
-            <div className="flex gap-4">
-                <Link to={'/add-product'} className="px-4  py-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600">Add</Link>
-                <div onClick={deleteItems} className="px-4  py-2 bg-red-600 rounded-md cursor-pointer text-white hover:bg-red-700">Mass Delete</div>
+    <div className="flex flex-col justify-between h-screen">
+        <div>
+            <div className="border border-b-black p-8 flex justify-between items-center">
+                <h1 className="text-4xl font-bold">Product List</h1>
+                <div className="flex gap-4">
+                    <Link to={'/add-product'} className="px-4  py-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600">Add</Link>
+                    <div onClick={deleteItems} className="px-4  py-2 bg-red-600 rounded-md cursor-pointer text-white hover:bg-red-700">Mass Delete</div>
+                </div>
+                
             </div>
-            
+
+            <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mx-auto w-fit p-10">
+                {products?.map((product: IProduct) => {
+                    return <div key={product.id}>
+                                <Product product={product} 
+                                        addMassDeleteItem={addMassDeleteItem} 
+                                        removeMassDeleteItem={removeMassDeleteItem}
+                                    />
+                        </div>
+                })}
+            </div>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 h-full mx-auto w-fit p-10">
-            {products?.map((product: IProduct) => {
-                return <div key={product.id}>
-                            <Product product={product} 
-                                    addMassDeleteItem={addMassDeleteItem} 
-                                    removeMassDeleteItem={removeMassDeleteItem}
-                                />
-                    </div>
-            })}
-        </div>
         <Footer />
     </div>
 
