@@ -31,7 +31,7 @@ interface ISuccessResponse {
     length?: string
 }
 
-interface IErrorResponse {
+export interface IErrorResponse {
     type_id: string,
     name: string,
     sku: string,
@@ -190,9 +190,9 @@ const AddProduct = () => {
                     <div className='text-sm text-red-500'>{errors?.type_id}</div>
                 </div>
 
-                {currentType === BOOK ? <BookInput value={newItem.weight} handleInputChange={handleInputChange} /> : 
-                currentType === DVD ? <DVDInput value={newItem.size} handleInputChange={handleInputChange} /> :
-                currentType === Furniture && <FurnitureInput value={newItem} handleInputChange={handleInputChange} />}
+                {currentType === BOOK ? <BookInput value={newItem.weight} errors={errors} handleInputChange={handleInputChange} /> : 
+                currentType === DVD ? <DVDInput value={newItem.size} errors={errors} handleInputChange={handleInputChange} /> :
+                currentType === Furniture && <FurnitureInput value={newItem} errors={errors} handleInputChange={handleInputChange} />}
             </div>
         </div>
         <Footer />
