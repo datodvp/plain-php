@@ -2,9 +2,9 @@
 
 class Database {
     private $host = "localhost";
+    private $username = "dato";
+    private $password = '123456';
     private $db_name = "products";
-    private $username = "root";
-    private $password = "123456";
     private $connection;
 
     public static function getConnection(){
@@ -13,6 +13,7 @@ class Database {
         $db->connection = null;
 
         try {
+            mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
             $db->connection = mysqli_connect(
                 $db->host,
                 $db->username,

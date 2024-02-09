@@ -28,6 +28,7 @@ const List = () => {
         axios.get('http://127.0.0.1:8000/api/products')
             .then(response => {
                 setProducts(response.data.data)
+                console.log(response);
             })
     }, [])
 
