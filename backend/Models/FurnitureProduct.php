@@ -1,8 +1,6 @@
 <?php
 
 class FurnitureProduct extends Product {
-    private $attribute = "Dimensions";
-    private $measurement = null;
     private $dimensions;
     private $width;
     private $height;

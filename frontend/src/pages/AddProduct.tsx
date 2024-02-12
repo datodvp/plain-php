@@ -149,21 +149,21 @@ const AddProduct = () => {
             
         </div>
         <div className="grid gap-6 sm:grid-cols-1 h-full ml-10% w-fit p-10">
-            <div className='flex flex-col gap-5'>
+            <form id='$product_form' className='flex flex-col gap-5'>
                 <div className='flex flex-col'>
             
                     <div className='flex flex-col w-[270px] gap-3'>   
                         <div className='flex   justify-between'>
                             <label htmlFor="sku" className='p-[5px]'>SKU:</label>
                             <div className='flex flex-col'>
-                                <input type="text" name='sku' value={newItem.sku} onChange={handleInputChange} id='sku' className='border p-[5px]' />
+                                <input id="sku" type="text" name='sku' value={newItem.sku} onChange={handleInputChange} id='sku' className='border p-[5px]' />
                                 <span className='text-sm text-red-500'>{errors?.sku}</span>
                             </div>
                         </div>
                         <div className='flex   justify-between'>
                             <label htmlFor="name" className='p-[5px]'>Name:</label>
                             <div className='flex flex-col '>
-                              <input type="text" name='name' value={newItem.name} onChange={handleInputChange} id='name' className='border p-[5px]' />
+                              <input id="name" type="text" name='name' value={newItem.name} onChange={handleInputChange} id='name' className='border p-[5px]' />
                               <span className='text-sm text-red-500'>{errors?.name}</span>
                             </div>
 
@@ -171,7 +171,7 @@ const AddProduct = () => {
                         <div className='flex  justify-between'>
                             <label htmlFor="price" className='p-[5px]'>price:</label>
                             <div className='flex flex-col'>
-                                <input type="text" name='price' value={newItem.price} onChange={handleInputChange} id='price' className='border p-[5px]' />
+                                <input id="price" type="text" name='price' value={newItem.price} onChange={handleInputChange} id='price' className='border p-[5px]' />
                                 <span className='text-sm text-red-500'>{errors?.price}</span>
                             </div>
                         </div>
@@ -180,7 +180,7 @@ const AddProduct = () => {
                 <div>
                     <div className='flex gap-5'>
                         <label htmlFor="select">Type Switcher</label>
-                        <select onChange={changeType} name="type_value" id="select" defaultValue="" className='border'>
+                        <select id="productType" onChange={changeType} name="type_value" id="select" defaultValue="" className='border'>
                             <option value="" disabled>Select Type</option>
                             <option value="1">Book</option>
                             <option value="2">DVD</option>
@@ -193,7 +193,7 @@ const AddProduct = () => {
                 {currentType === BOOK ? <BookInput value={newItem.weight} errors={errors} handleInputChange={handleInputChange} /> : 
                 currentType === DVD ? <DVDInput value={newItem.size} errors={errors} handleInputChange={handleInputChange} /> :
                 currentType === Furniture && <FurnitureInput value={newItem} errors={errors} handleInputChange={handleInputChange} />}
-            </div>
+            </form>
         </div>
         <Footer />
     </div>

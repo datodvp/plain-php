@@ -1,8 +1,6 @@
 <?php
 
 class BookProduct extends Product {
-    private $attribute = "Weight";
-    private $measurement = "Kg";
     private $weight;
 
     public function __construct(array $attributes) {

@@ -1,8 +1,7 @@
 <?php
 
 class DVDProduct extends Product {
-    private $attribute = "Size";
-    private $measurement = "MB";
+
     private $size;
 
     public function __construct(array $attributes) {
