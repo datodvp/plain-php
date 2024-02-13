@@ -25,10 +25,9 @@ const List = () => {
     const selectedIds = useRef<number[]>([])
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/api/products')
+        axios.get('https://scandi-dato.000webhostapp.com/api/products')
             .then(response => {
                 setProducts(response.data.data)
-                console.log(response);
             })
     }, [])
 
@@ -36,23 +35,26 @@ const List = () => {
         selectedIds.current.push(id)
     }
 
-    const removeMassDeleteItem = (id: number) => {
-        const indexOfId = selectedIds.current.indexOf(id);
-
-        if(indexOfId > -1) {
-            selectedIds.current.splice(indexOfId, 1);
-        }
-    }
-
     const deleteItems = () => {
-        if(selectedIds.current.length)
+        // I had to do this because of the way autoQA is testing mass remove. I could not use reactiviry in here
+        const checkboxes = document.getElementsByClassName('delete-checkbox') as HTMLCollectionOf<HTMLInputElement>;
+        for (let i = 0; i < checkboxes.length; i++) {
+            if(checkboxes[i].checked === true) {
+                addMassDeleteItem(Number(checkboxes[i].value));
+            }
+        }
+        if(selectedIds.current.length) {
+            const items = {
+                id_list: [...selectedIds.current]
+            }
+            axios.post<IApiResponse<IProduct[]>>('https://scandi-dato.000webhostapp.com/api/products/delete',
+            JSON.stringify(items)
+            ).then((response) => {
+                setProducts(response.data.data);
+            })
+        }
 
-        axios.post<IApiResponse<IProduct[]>>('http://127.0.0.1:8000/api/products/delete',
-        {
-            id_list: [...selectedIds.current]
-        }).then((response) => {
-            setProducts(response.data.data);
-        })
+
     }
 
   return (<>
@@ -61,8 +63,8 @@ const List = () => {
             <div className="border border-b-black p-8 flex justify-between items-center">
                 <h1 className="text-4xl font-bold">Product List</h1>
                 <div className="flex gap-4">
-                    <Link to={'/add-product'} className="px-4  py-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600">Add</Link>
-                    <div onClick={deleteItems} className="px-4  py-2 bg-red-600 rounded-md cursor-pointer text-white hover:bg-red-700">Mass Delete</div>
+                    <Link to={'/add-product'} className="px-4  py-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600">ADD</Link>
+                    <button onClick={deleteItems} className="px-4  py-2 bg-red-600 rounded-md cursor-pointer text-white hover:bg-red-700">MASS DELETE</button>
                 </div>
                 
             </div>
@@ -70,10 +72,7 @@ const List = () => {
             <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mx-auto w-fit p-10">
                 {products?.map((product: IProduct) => {
                     return <div key={product.id}>
-                                <Product product={product} 
-                                        addMassDeleteItem={addMassDeleteItem} 
-                                        removeMassDeleteItem={removeMassDeleteItem}
-                                    />
+                                <Product product={product} />
                         </div>
                 })}
             </div>

@@ -35,7 +35,7 @@ class FurnitureProduct extends Product {
 
         $db = Database::getConnection();
 
-        $sql = "INSERT INTO `products`.`products` (`type_id`, `name`, `sku`, `price`, `type_value`) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `products` (`type_id`, `name`, `sku`, `price`, `type_value`) VALUES (?, ?, ?, ?, ?)";
 
         $statement = $db->prepare($sql);
         

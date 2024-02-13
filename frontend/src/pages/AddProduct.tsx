@@ -4,7 +4,7 @@ import { ChangeEvent, useEffect, useState } from 'react'
 import BookInput from '../components/BookInput';
 import DVDInput from '../components/DVDInput';
 import FurnitureInput from '../components/FurnitureInput';
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export interface IPostBody {
@@ -103,13 +103,11 @@ const AddProduct = () => {
     }, [currentType])
 
     const addItem = () => {
-        axios.post('http://127.0.0.1:8000/api/products', newItem)
-        .then((response: AxiosResponse<IApiResonse>) => {
-            console.log(response.data.data?.product);
+        axios.post('https://scandi-dato.000webhostapp.com/api/products', JSON.stringify(newItem))
+        .then(() => {
             navigate('/');
         })
         .catch((error: AxiosError<IApiResonse>) => {
-            console.log(error.response?.data.data?.errors);
             setErrors(error.response?.data.data?.errors);
         })
     }
@@ -143,27 +141,27 @@ const AddProduct = () => {
         <div className="border border-b-black p-8 flex justify-between items-center">
             <h1 className="text-4xl font-bold">Product Add</h1>
             <div className="flex gap-4">
-                <div onClick={addItem} className="px-4  py-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600">Save</div>
+                <button onClick={addItem} className="px-4  py-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600">Save</button>
                 <Link to={'/'}  className="px-4  py-2 bg-red-600 rounded-md cursor-pointer text-white hover:bg-red-700">Cancel</Link>
             </div>
             
         </div>
         <div className="grid gap-6 sm:grid-cols-1 h-full ml-10% w-fit p-10">
-            <form id='$product_form' className='flex flex-col gap-5'>
+            <form id='product_form' className='flex flex-col gap-5'>
                 <div className='flex flex-col'>
             
                     <div className='flex flex-col w-[270px] gap-3'>   
                         <div className='flex   justify-between'>
                             <label htmlFor="sku" className='p-[5px]'>SKU:</label>
                             <div className='flex flex-col'>
-                                <input id="sku" type="text" name='sku' value={newItem.sku} onChange={handleInputChange} id='sku' className='border p-[5px]' />
+                                <input id="sku" type="text" name='sku' value={newItem.sku} onChange={handleInputChange} className='border p-[5px]' />
                                 <span className='text-sm text-red-500'>{errors?.sku}</span>
                             </div>
                         </div>
                         <div className='flex   justify-between'>
                             <label htmlFor="name" className='p-[5px]'>Name:</label>
                             <div className='flex flex-col '>
-                              <input id="name" type="text" name='name' value={newItem.name} onChange={handleInputChange} id='name' className='border p-[5px]' />
+                              <input id="name" type="text" name='name' value={newItem.name} onChange={handleInputChange} className='border p-[5px]' />
                               <span className='text-sm text-red-500'>{errors?.name}</span>
                             </div>
 
@@ -171,7 +169,7 @@ const AddProduct = () => {
                         <div className='flex  justify-between'>
                             <label htmlFor="price" className='p-[5px]'>price:</label>
                             <div className='flex flex-col'>
-                                <input id="price" type="text" name='price' value={newItem.price} onChange={handleInputChange} id='price' className='border p-[5px]' />
+                                <input id="price" type="text" name='price' value={newItem.price} onChange={handleInputChange} className='border p-[5px]' />
                                 <span className='text-sm text-red-500'>{errors?.price}</span>
                             </div>
                         </div>
@@ -180,7 +178,7 @@ const AddProduct = () => {
                 <div>
                     <div className='flex gap-5'>
                         <label htmlFor="select">Type Switcher</label>
-                        <select id="productType" onChange={changeType} name="type_value" id="select" defaultValue="" className='border'>
+                        <select id="productType" onChange={changeType} name="type_value" defaultValue="" className='border'>
                             <option value="" disabled>Select Type</option>
                             <option value="1">Book</option>
                             <option value="2">DVD</option>
