@@ -52,6 +52,7 @@ console.log()
             }
             apiService.massDelete(JSON.stringify(items)).then((response) => {
                 setProducts(response.data.data);
+                // test
             })
         }
 
