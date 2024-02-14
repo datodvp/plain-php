@@ -22,7 +22,7 @@ class Router {
         if (file_exists("Controllers/" . $controller . ".php")) {
             $newController = new $controller();
         } else {
-            throw new Exception('Controller file not foundsssssssssssss');
+            throw new Exception('Controller file not found');
         }
 
         if (method_exists($newController, $method)) {
