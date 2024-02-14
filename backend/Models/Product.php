@@ -132,20 +132,21 @@ abstract class Product implements JsonSerializable {
 
     public static function validate(array $attributes) {
         $errors = [];
-
-        if(!$attributes['name']) {
+    
+        if(empty($attributes['name'])) {
             $errors['name'] = 'Please, submit required data';
         }
-        if(!$attributes['sku']) {
+        if(empty($attributes['sku'])) {
             $errors['sku'] = 'Please, submit required data';
         }
-        if(!$attributes['price']) {
+        if(empty($attributes['price'])) {
             $errors['price'] = 'Please, submit required data';
+        } elseif (!is_numeric($attributes['price'])) {
+            $errors['price'] = 'Please, provide the data of indicated type';
         }
-
+    
         return $errors;
     }
-    
     public function jsonSerialize(): array {
         $properties = get_object_vars($this);
         return $properties;

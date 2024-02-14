@@ -46,9 +46,9 @@ class BookProduct extends Product {
 
     public static function validate(array $attributes) {
         $bookProduct = new self($attributes);
-
+    
         $errors = [];
-
+    
         if(!$bookProduct->getName()) {
             $errors['name'] = 'Please, submit required data';
         }
@@ -60,11 +60,15 @@ class BookProduct extends Product {
         }
         if(!$bookProduct->getPrice()) {
             $errors['price'] = 'Please, submit required data';
+        } elseif (!is_numeric($bookProduct->getPrice())) {
+            $errors['price'] = 'Please, provide the data of indicated type';
         }
         if(!$bookProduct->getWeight()) {
             $errors['weight'] = 'Please, submit required data';
+        } elseif (!is_numeric($bookProduct->getWeight())) {
+            $errors['weight'] = 'Please, provide the data of indicated type';
         }
-
+    
         return $errors;
     }
 

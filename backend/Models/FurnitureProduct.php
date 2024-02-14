@@ -63,34 +63,43 @@ class FurnitureProduct extends Product {
     }
 
     public static function validate(array $attributes) {
-        $bookProduct = new self($attributes);
-
+        $furnitureProduct = new self($attributes);
+    
         $errors = [];
-
-        if(!$bookProduct->getName()) {
+    
+        if(!$furnitureProduct->getName()) {
             $errors['name'] = 'Please, submit required data';
         }
-        if(!$bookProduct->getSKU()) {
+        if(!$furnitureProduct->getSKU()) {
             $errors['sku'] = 'Please, submit required data';
         }
-        if(!$bookProduct->getType()) {
+        if(!$furnitureProduct->getType()) {
             $errors['type_id'] = 'Please, submit required data';
         }
-        if(!$bookProduct->getPrice()) {
+        if(!$furnitureProduct->getPrice()) {
             $errors['price'] = 'Please, submit required data';
+        } elseif (!is_numeric($furnitureProduct->getPrice())) {
+            $errors['price'] = 'Please, provide the data of indicated type';
         }
-        if(!$bookProduct->getWidth()) {
+        if(!$furnitureProduct->getWidth()) {
             $errors['width'] = 'Please, submit required data';
+        } elseif (!is_numeric($furnitureProduct->getWidth())) {
+            $errors['width'] = 'Please, provide the data of indicated type';
         }
-        if(!$bookProduct->getHeight()) {
+        if(!$furnitureProduct->getHeight()) {
             $errors['height'] = 'Please, submit required data';
+        } elseif (!is_numeric($furnitureProduct->getHeight())) {
+            $errors['height'] = 'Please, provide the data of indicated type';
         }
-        if(!$bookProduct->getLength()) {
+        if(!$furnitureProduct->getLength()) {
             $errors['length'] = 'Please, submit required data';
+        } elseif (!is_numeric($furnitureProduct->getLength())) {
+            $errors['length'] = 'Please, provide the data of indicated type';
         }
-
+    
         return $errors;
     }
+    
 
 }
 

@@ -47,29 +47,29 @@ class DVDProduct extends Product {
     }
 
     public static function validate(array $attributes) {
-        $bookProduct = new self($attributes);
-
+        $dvdProduct = new self($attributes);
+    
         $errors = [];
-
-        if(!$bookProduct->getName()) {
+    
+        if(!$dvdProduct->getName()) {
             $errors['name'] = 'Please, submit required data';
         }
-        if(!$bookProduct->getSKU()) {
+        if(!$dvdProduct->getSKU()) {
             $errors['sku'] = 'Please, submit required data';
         }
-        if(!$bookProduct->getType()) {
+        if(!$dvdProduct->getType()) {
             $errors['type_id'] = 'Please, submit required data';
         }
-        if(!$bookProduct->getPrice()) {
+        if(!$dvdProduct->getPrice()) {
             $errors['price'] = 'Please, submit required data';
+        } elseif (!is_numeric($dvdProduct->getPrice())) {
+            $errors['price'] = 'Please, provide the data of indicated type';
         }
-        if(!$bookProduct->getSize()) {
+        if(!$dvdProduct->getSize()) {
             $errors['size'] = 'Please, submit required data';
+        } elseif (!is_numeric($dvdProduct->getSize())) {
+            $errors['size'] = 'Please, provide the data of indicated type';
         }
-        if(!$bookProduct->getType()) {
-            $errors['type_id'] = 'Please, submit required data';
-        }
-
         return $errors;
     }
 
