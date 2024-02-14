@@ -6,6 +6,7 @@ import DVDInput from '../components/DVDInput';
 import FurnitureInput from '../components/FurnitureInput';
 import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useApiService } from '../Services/api';
 
 export interface IPostBody {
     type_id: string,
@@ -103,7 +104,8 @@ const AddProduct = () => {
     }, [currentType])
 
     const addItem = () => {
-        axios.post('https://scandi-dato.000webhostapp.com/api/products', JSON.stringify(newItem))
+        const apiService = useApiService();
+        apiService.addProduct(JSON.stringify(newItem))
         .then(() => {
             navigate('/');
         })

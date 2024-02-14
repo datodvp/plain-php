@@ -3,6 +3,7 @@ import axios from "axios"
 import Product from "../components/Product"
 import { Link } from "react-router-dom"
 import Footer from "../components/Footer"
+import { useApiService } from "../Services/api"
 
 interface IApiResponse<T> {
     data: T,
@@ -25,17 +26,19 @@ const List = () => {
     const selectedIds = useRef<number[]>([])
 
     useEffect(() => {
-        axios.get('https://scandi-dato.000webhostapp.com/api/products')
-            .then(response => {
+        const apiService = useApiService();
+        
+        apiService.getProducts().then(response => {
                 setProducts(response.data.data)
             })
     }, [])
-
+console.log()
     const addMassDeleteItem = (id: number) => {
         selectedIds.current.push(id)
     }
 
     const deleteItems = () => {
+        const apiService = useApiService();
         // I had to do this because of the way autoQA is testing mass remove. I could not use reactiviry in here
         const checkboxes = document.getElementsByClassName('delete-checkbox') as HTMLCollectionOf<HTMLInputElement>;
         for (let i = 0; i < checkboxes.length; i++) {
@@ -47,9 +50,7 @@ const List = () => {
             const items = {
                 id_list: [...selectedIds.current]
             }
-            axios.post<IApiResponse<IProduct[]>>('https://scandi-dato.000webhostapp.com/api/products/delete',
-            JSON.stringify(items)
-            ).then((response) => {
+            apiService.massDelete(JSON.stringify(items)).then((response) => {
                 setProducts(response.data.data);
             })
         }
