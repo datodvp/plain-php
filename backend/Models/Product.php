@@ -138,6 +138,19 @@ abstract class Product implements JsonSerializable {
         }
         if(empty($attributes['sku'])) {
             $errors['sku'] = 'Please, submit required data';
+        }elseif($attributes['sku']) {
+            // check if SKU exists
+            $db = Database::getConnection();
+            $sku = $attributes['sku'];
+            $sql = 'SELECT COUNT(*) FROM products WHERE sku = ?';
+            $statement = $db->prepare($sql);
+            $statement->bind_param("s", $sku);
+            $statement->execute();
+            $statement->bind_result($count);
+            $statement->fetch();
+            if ($count > 0) {
+                $errors['sku'] = "The SKU already exists.";
+            }
         }
         if(empty($attributes['price'])) {
             $errors['price'] = 'Please, submit required data';

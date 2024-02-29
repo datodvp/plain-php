@@ -72,6 +72,19 @@ class FurnitureProduct extends Product {
         }
         if(!$furnitureProduct->getSKU()) {
             $errors['sku'] = 'Please, submit required data';
+        }elseif($furnitureProduct->getSKU()) {
+            // check if SKU exists
+            $db = Database::getConnection();
+            $sku = $furnitureProduct->getSKU();
+            $sql = 'SELECT COUNT(*) FROM products WHERE sku = ?';
+            $statement = $db->prepare($sql);
+            $statement->bind_param("s", $sku);
+            $statement->execute();
+            $statement->bind_result($count);
+            $statement->fetch();
+            if ($count > 0) {
+                $errors['sku'] = "The SKU already exists.";
+            }
         }
         if(!$furnitureProduct->getType()) {
             $errors['type_id'] = 'Please, submit required data';
